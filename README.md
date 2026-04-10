@@ -83,6 +83,17 @@ python src/train_model.py
 streamlit run app.py
 ```
 
+## 🚀 Live Demo
+
+🔗 https://book-review-analyzer-eekqesizeaplexpejnpcrb.streamlit.app/
+
+---
+
+## 💻 Run Locally (Windows)
+
+You can run the app locally by simply double-clicking:
+run_app.bat
+
 ---
 
 ## 📁 Project Structure
