@@ -1,153 +1,164 @@
-# 📚 Book Review Analyzer & Mood-Based Recommender
+# Book Review Analyzer & Mood-Based Recommender
 
-This project is an end-to-end data science application that analyzes book reviews and provides mood-based recommendations.
+An end-to-end Python and NLP application that analyzes book-review sentiment and recommends books based on the reader's mood.
 
-It combines data analysis, machine learning, and a simple web interface to create a usable system.
+The project combines data preparation, exploratory analysis, machine learning, rule-based multi-label classification, and a deployable Streamlit interface.
 
----
+[**Open the live demo**](https://book-review-analyzer-eekqesizeaplexpejnpcrb.streamlit.app/)
 
-## 🚀 Features
+## Project at a glance
 
-- 📊 Exploratory Data Analysis (EDA) on Amazon book reviews  
-- 🤖 Sentiment classification using TF-IDF + Logistic Regression  
-- 🎭 Mood-based multi-label tagging (rule-based keyword detection)  
-- 🌐 Interactive Streamlit web application  
-  - Mood-based book recommendations  
-  - Review sentiment and mood analysis  
+| Component | Implementation |
+|---|---|
+| Dataset | 20,000 sampled Amazon book reviews |
+| Sentiment model | TF-IDF + class-balanced Logistic Regression |
+| Mood analysis | Multi-label keyword-based classification |
+| Interface | Streamlit |
+| Sentiment accuracy | 0.76 |
+| Weighted F1-score | 0.78 |
 
----
+## What the application does
 
-## 🧠 Methodology
+- Classifies a written review as positive, neutral, or negative
+- Detects one or more mood signals in review text
+- Recommends books for uplifting, dark, funny, emotional, or thought-provoking moods
+- Presents the workflow through a simple interactive web application
 
-### 1. Data Preparation
-- Dataset sampled to **20,000 rows** for efficiency  
-- Cleaned by removing missing values and selecting relevant features  
+## Application preview
 
-### 2. Sentiment Analysis
-- Ratings converted into:
-  - Positive (4–5)
-  - Neutral (3)
-  - Negative (1–2)  
-- Text vectorized using **TF-IDF (max 10,000 features)**  
-- Model trained using **Logistic Regression (with class balancing)**  
+### Mood-based recommendations
 
-### 3. Mood Labeling
-- Five predefined mood categories:
-  - uplifting  
-  - dark  
-  - funny  
-  - emotional  
-  - thought-provoking  
-- Implemented using keyword-based multi-label classification  
-- Supports multiple labels per review  
+![Mood-based book recommendations](images/app1.png)
 
-### 4. Application Layer
-- Built with **Streamlit**  
-- Allows users to:
-  - Get book recommendations based on mood  
-  ![Recommendation](images/app1.png)
-  - Analyze custom review text  
-  ![Analysis](images/app2.png)
+### Review analysis
 
----
+![Review sentiment and mood analysis](images/app2.png)
 
-## 📊 Model Performance
+## Methodology
 
-- Accuracy: **0.76**  
-- Weighted F1-score: **0.78**
+### 1. Data preparation
 
-The balanced Logistic Regression model was selected because it improves performance on minority classes such as neutral and negative reviews, resulting in a more balanced sentiment classification system.
+The working dataset was sampled to 20,000 reviews for efficient experimentation. Missing values were removed and the relevant text, rating, and book fields were retained for analysis and modeling.
 
----
+### 2. Sentiment classification
 
-## ⚙️ Installation
+Ratings were mapped to three sentiment classes:
+
+- **Positive:** ratings 4–5
+- **Neutral:** rating 3
+- **Negative:** ratings 1–2
+
+Review text was converted into TF-IDF vectors with a maximum of 10,000 features. A class-balanced Logistic Regression model was selected to improve the treatment of minority neutral and negative examples.
+
+### 3. Mood detection
+
+Reviews can receive multiple mood labels. The current version uses transparent keyword rules for five categories:
+
+- uplifting
+- dark
+- funny
+- emotional
+- thought-provoking
+
+This makes the behavior easy to inspect while providing a useful baseline for future transformer-based experiments.
+
+### 4. Application layer
+
+The trained sentiment model, mood labeler, analyzer, and recommendation workflow are integrated into a Streamlit application for interactive use.
+
+## Model results
+
+The sentiment classifier achieved:
+
+- **Accuracy:** 0.76
+- **Weighted F1-score:** 0.78
+
+The result reflects the imbalance in the source data: positive reviews dominate, while neutral reviews are more difficult to identify consistently. Class balancing was kept because it produces a more useful model across all three classes than optimizing only for the majority class.
+
+## Technology
+
+- Python
+- Pandas
+- Scikit-learn
+- TF-IDF
+- Logistic Regression
+- Joblib
+- Streamlit
+- Jupyter Notebook
+
+## Run locally
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/salfayoumi/book-review-analyzer.git
+cd book-review-analyzer
+```
+
+2. Install the dependencies:
 
 ```bash
 pip install -r requirements.txt
-````
+```
 
----
-
-## ▶️ Usage
-
-1. Make sure the dataset file `sample_books.csv` is inside the `data/` folder
-2. Train the model:
+3. Confirm that `data/sample_books.csv` is available, then train the model:
 
 ```bash
 python src/train_model.py
 ```
 
-3. Run the application:
+4. Start the application:
 
 ```bash
 streamlit run app.py
 ```
 
-## 🚀 Live Demo
+On Windows, `run_app.bat` provides an additional local launcher.
 
-🔗 https://book-review-analyzer-eekqesizeaplexpejnpcrb.streamlit.app/
+## Project structure
 
----
-
-## 💻 Run Locally (Windows)
-
-You can run the app locally by simply double-clicking:
-run_app.bat
-
----
-
-## 📁 Project Structure
-
-```
-staj_project/
-│
+```text
+book-review-analyzer/
 ├── data/
 │   └── sample_books.csv
-│
+├── images/
+│   ├── app1.png
+│   └── app2.png
 ├── models/
 │   ├── sentiment_model.joblib
 │   └── tfidf_vectorizer.joblib
-│
 ├── notebooks/
 │   └── eda.ipynb
-│
 ├── src/
-│   ├── train_model.py
-│   ├── mood_labeler.py
 │   ├── analyzer.py
-│   └── test_analyzer.py
-│
+│   ├── mood_labeler.py
+│   ├── test_analyzer.py
+│   └── train_model.py
 ├── app.py
 ├── requirements.txt
+├── run_app.bat
 └── README.md
 ```
 
----
+## Limitations
 
-## ⚠️ Limitations
+- The dataset is dominated by positive reviews
+- Neutral sentiment remains the most difficult class
+- Mood detection depends on the coverage of the keyword rules
+- Recommendations use review-level patterns rather than personal user history
+- The processed dataset does not include richer metadata such as author and genre
 
-* The dataset is imbalanced, with positive reviews dominating the data
-* The sentiment model performs better on positive reviews than on neutral reviews
-* Mood labeling is rule-based and depends on keyword coverage
-* Recommendations are based on review-level patterns rather than personalized user preferences
-* Author information was not included in the processed dataset used in this project
+## Next steps
 
----
+- Compare the baseline with transformer-based sentiment models
+- Evaluate zero-shot or supervised multi-label mood classification
+- Add per-class evaluation and error analysis
+- Incorporate author, genre, and reader-preference signals
+- Add automated tests and continuous integration
 
-## 🚀 Future Improvements
+## Author
 
-* Use transformer-based models such as BERT or zero-shot classification for mood detection
-* Improve neutral and negative sentiment detection
-* Add personalized recommendation logic
-* Integrate richer metadata (e.g., author, genre) into recommendations
-* Deploy the application online
+**Salsabeel Alfayoumi**  
+Computer Engineer focused on Python, applied AI, data analysis, and intelligent systems.
 
----
-
-## 👩‍💻 Author
-
-Salsabeel Alfayoumi
-
-```
-
-
+[Portfolio](https://salfayoumi.github.io/) · [GitHub profile](https://github.com/salfayoumi)
